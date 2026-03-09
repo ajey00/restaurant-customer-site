@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Menu - Spice Fusion</title>
+    <link rel="stylesheet" href="css/customer-menu.css">
+</head>
+<body>
+<div id="menuPage">
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>🍽️ Restaurant Menu</h1>
+                <p>Fresh & Delicious Food</p>
+            </div>
+            <button class="cart-button" onclick="goToCheckout()">
+                🛒 View Cart
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div class="hero">
+            <h2>Our Delicious Menu</h2>
+            <p>Fresh ingredients, bold flavors, unforgettable experience</p>
+        </div>
+
+        <div class="filter-section">
+            <button class="filter-btn active" onclick="filterMenuGlobal('all')">🍽️ All</button>
+            <button class="filter-btn" onclick="filterMenuGlobal('veg')">🟢 Veg</button>
+            <button class="filter-btn" onclick="filterMenuGlobal('nonveg')">🔴 Non-Veg</button>
+        </div>
+
+        <div id="menuContainer"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Restaurant. All rights reserved.</p>
+        <p>Made with ❤️ for food lovers</p>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+</div>
+
+<div id="checkoutPage" style="display:none;">
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>🍽️ Checkout</h1>
+                <p>Complete your order</p>
+            </div>
+            <a onclick="goBackToMenu()" class="back-button">← Back to Menu</a>
+        </div>
+    </header>
+
+    <main>
+        <h1 class="checkout-title">Your Cart</h1>
+        <div class="checkout-container">
+            <div class="cart-section">
+                <h2 class="section-title">Cart Items</h2>
+                <div id="cartItems"></div>
+            </div>
+
+            <div class="summary-section">
+                <h2 class="section-title">Order Summary</h2>
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">₹0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax (5%):</span>
+                    <span id="tax">₹0</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span class="amount" id="total">₹0</span>
+                </div>
+
+                <div class="table-number-section">
+                    <h3 class="section-title">Table Information</h3>
+                    <div class="input-group">
+                        <label class="input-label" for="tableNumber">Enter Your Table Number</label>
+                        <input 
+                            type="number" 
+                            id="tableNumber" 
+                            class="table-input" 
+                            placeholder="e.g., 5"
+                            min="1"
+                            max="10"
+                        >
+                    </div>
+                </div>
+
+                <button class="confirm-btn" id="confirmOrderBtn" onclick="confirmOrder()">Place Order</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Restaurant. All rights reserved.</p>
+    </footer>
+
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon">✅</div>
+            <h2>Order Confirmed!</h2>
+            <p>Thank you for your order!<br>Your delicious food will be ready soon.</p>
+            <button class="modal-btn" onclick="goBackToMenuFromModal()">Order More</button>
+        </div>
+    </div>
+</div>
+
+    <script src="js/default-menu-dataset.js"></script>
+    <script src="js/customer-menu.js"></script>
+</body>
+</html>
