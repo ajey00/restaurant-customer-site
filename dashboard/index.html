@@ -1,1 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Owner Dashboard</title>
+    <link rel="stylesheet" href="owner-dashboard.css">
+</head>
+
+<body>
+    <div id="ownerAuth">
+        <div class="auth-container">
+            <div class="auth-icon">🍽️</div>
+
+            <div id="signupForm">
+                <h1>Create Your Account</h1>
+                <p class="auth-subtitle">Start managing your restaurant</p>
+
+                <div class="error-message" id="signupError"></div>
+
+                <form onsubmit="handleSignup(event)">
+                    <div class="auth-form-group">
+                        <label for="restaurantName">Restaurant Name</label>
+                        <input type="text" id="restaurantName" placeholder="e.g., Spice Fusion" required>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="ownerEmail">Email Address</label>
+                        <input type="email" id="ownerEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="ownerPhoneNumber">Phone Number</label>
+                        <div class="phone-number-group">
+                            <select id="ownerCountryCode" class="country-select" required></select>
+                            <div class="phone-input-wrapper">
+                                <span class="dial-code-badge" id="selectedDialCode">+91</span>
+                                <input type="tel" id="ownerPhoneNumber" placeholder="9876543210" inputmode="numeric"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="ownerPassword">Password</label>
+                        <input type="password" id="ownerPassword" placeholder="Create a password" required>
+                        <p class="auth-hint">Use at least 8 characters with uppercase, lowercase, number, and special
+                            character.</p>
+                    </div>
+                    <button type="submit" class="btn-auth">Create Account</button>
+                </form>
+
+                <div class="auth-toggle">
+                    Already have an account? <a onclick="showLogin()">Login</a>
+                </div>
+            </div>
+
+            <div id="signupVerificationForm" style="display:none;">
+                <h1>Verify Sign-Up</h1>
+                <p class="auth-subtitle">Enter the 6-digit verification code to complete account creation</p>
+
+                <div class="error-message" id="signupVerificationError"></div>
+                <div class="info-message" id="signupCodeInfo"></div>
+
+                <form onsubmit="verifySignupCode(event)">
+                    <div class="auth-form-group">
+                        <label for="signupVerificationCode">Verification Code</label>
+                        <input type="text" id="signupVerificationCode" placeholder="Enter 6-digit code" maxlength="6"
+                            inputmode="numeric" required>
+                    </div>
+                    <button type="submit" class="btn-auth">Verify & Create Account</button>
+                    <button type="button" class="btn-auth-secondary" onclick="resendSignupCode()">Resend Code</button>
+                </form>
+
+                <div class="auth-toggle">
+                    Entered wrong details? <a onclick="backToSignupFromVerification()">Back to Sign Up</a>
+                </div>
+            </div>
+
+            <div id="loginForm" style="display:none;">
+                <h1>Welcome Back</h1>
+                <p class="auth-subtitle">Login to your restaurant dashboard</p>
+
+                <div class="error-message" id="loginError"></div>
+
+                <form onsubmit="handleLogin(event)">
+                    <div class="auth-form-group">
+                        <label for="loginIdentifier">Email or Phone Number</label>
+                        <input type="text" id="loginIdentifier" placeholder="your@email.com or +91 9876543210" required>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn-auth">Login</button>
+                </form>
+
+                <div class="auth-toggle" style="margin-top: 10px;">
+                    <a onclick="showForgotPassword()">Forgot Password?</a>
+                </div>
+
+                <div class="auth-toggle">
+                    Don't have an account? <a onclick="showSignup()">Sign Up</a>
+                </div>
+            </div>
+
+            <div id="loginVerificationForm" style="display:none;">
+                <h1>Verify Login</h1>
+                <p class="auth-subtitle">Enter the 6-digit code to continue</p>
+
+                <div class="error-message" id="loginVerificationError"></div>
+                <div class="info-message" id="loginCodeInfo"></div>
+
+                <form onsubmit="verifyLoginCode(event)">
+                    <div class="auth-form-group">
+                        <label for="loginVerificationCode">Verification Code</label>
+                        <input type="text" id="loginVerificationCode" placeholder="Enter 6-digit code" maxlength="6"
+                            inputmode="numeric" required>
+                    </div>
+                    <button type="submit" class="btn-auth">Verify & Login</button>
+                    <button type="button" class="btn-auth-secondary" onclick="resendLoginCode()">Resend Code</button>
+                </form>
+
+                <div class="auth-toggle">
+                    Need to re-enter credentials? <a onclick="backToLoginFromVerification()">Back to Login</a>
+                </div>
+            </div>
+
+            <div id="forgotPasswordForm" style="display:none;">
+                <h1>Forgot Password</h1>
+                <p class="auth-subtitle">Verify with your registered email and phone number</p>
+
+                <div class="error-message" id="forgotPasswordError"></div>
+
+                <form onsubmit="startForgotPassword(event)">
+                    <div class="auth-form-group">
+                        <label for="forgotEmail">Registered Email</label>
+                        <input type="email" id="forgotEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="forgotPhoneNumber">Registered Phone Number</label>
+                        <div class="phone-number-group">
+                            <select id="forgotCountryCode" class="country-select" required></select>
+                            <div class="phone-input-wrapper no-badge">
+                                <input type="tel" id="forgotPhoneNumber" placeholder="9876543210" inputmode="numeric"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-auth">Send Reset Code</button>
+                </form>
+
+                <div class="auth-toggle">
+                    Remembered password? <a onclick="showLogin()">Back to Login</a>
+                </div>
+            </div>
+
+            <div id="resetVerificationForm" style="display:none;">
+                <h1>Verify Reset Code</h1>
+                <p class="auth-subtitle">Enter the 6-digit reset code</p>
+
+                <div class="error-message" id="resetVerificationError"></div>
+                <div class="info-message" id="resetCodeInfo"></div>
+
+                <form onsubmit="verifyResetCode(event)">
+                    <div class="auth-form-group">
+                        <label for="resetVerificationCode">Reset Code</label>
+                        <input type="text" id="resetVerificationCode" placeholder="Enter 6-digit code" maxlength="6"
+                            inputmode="numeric" required>
+                    </div>
+                    <button type="submit" class="btn-auth">Verify Code</button>
+                    <button type="button" class="btn-auth-secondary" onclick="resendResetCode()">Resend Code</button>
+                </form>
+
+                <div class="auth-toggle">
+                    <a onclick="showForgotPassword()">Back</a>
+                </div>
+            </div>
+
+            <div id="resetPasswordForm" style="display:none;">
+                <h1>Set New Password</h1>
+                <p class="auth-subtitle">Create a strong password for your account</p>
+
+                <div class="error-message" id="resetPasswordError"></div>
+
+                <form onsubmit="completePasswordReset(event)">
+                    <div class="auth-form-group">
+                        <label for="resetNewPassword">New Password</label>
+                        <input type="password" id="resetNewPassword" placeholder="Enter new password" required>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="resetConfirmPassword">Confirm New Password</label>
+                        <input type="password" id="resetConfirmPassword" placeholder="Confirm new password" required>
+                    </div>
+                    <button type="submit" class="btn-auth">Reset Password</button>
+                </form>
+
+                <div class="auth-toggle">
+                    <a onclick="showLogin()">Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard" style="display:none;">
+
+        <div class="header">
+            <div class="header-left">
+                <h1 id="restaurantHeader">🍽️ Restaurant Dashboard</h1>
+                <p>Manage your restaurant operations</p>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()">🚪 Logout</button>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('orders')">📋 Orders</button>
+            <button class="nav-tab" onclick="switchTab('tables')">🪑 Tables</button>
+            <button class="nav-tab" onclick="switchTab('billing')">💳 Billing</button>
+            <button class="nav-tab" onclick="switchTab('menu')">📖 Menu</button>
+            <button class="nav-tab" onclick="switchTab('qr')">📱 QR Code</button>
+            <!-- FEATURE 3: Analytics tab — owner dashboard only -->
+            <button class="nav-tab" onclick="switchTab('analytics')">📊 Analytics</button>
+            <button class="nav-tab" onclick="switchTab('settings')">⚙️ Settings</button>
+        </div>
+
+        <div id="orders-section" class="section active">
+            <div class="orders-grid" id="orders-container"></div>
+        </div>
+
+        <div id="tables-section" class="section">
+            <div class="tables-grid" id="tables-container"></div>
+        </div>
+
+        <div id="billing-section" class="section">
+            <div class="billing-grid" id="billing-container"></div>
+        </div>
+
+        <!-- FEATURE 3: Analytics section — owner dashboard only -->
+        <div id="analytics-section" class="section">
+            <div id="analytics-container"></div>
+        </div>
+
+        <div id="menu-section" class="section">
+            <div class="menu-add-form">
+                <h2>Add New Menu Item</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="newItemName">Item Name *</label>
+                        <input type="text" id="newItemName" placeholder="e.g., Butter Chicken" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newItemPrice">Price (₹) *</label>
+                        <input type="number" id="newItemPrice" placeholder="0" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newItemCategory">Category *</label>
+                        <select id="newItemCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Starters">⭐ Starters</option>
+                            <option value="Main Course">🍛 Main Course</option>
+                            <option value="Indian Breads">🫓 Indian Breads</option>
+                            <option value="Rice">🍚 Rice</option>
+                            <option value="Snacks">🍟 Snacks</option>
+                            <option value="Desserts">🍮 Desserts</option>
+                            <option value="Drinks">🥤 Drinks</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Type *</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="itemType" value="veg" checked>
+                                🟢 Veg
+                            </label>
+                            <label>
+                                <input type="radio" name="itemType" value="nonveg">
+                                🔴 Non-Veg
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="newItemImage">Dish Image</label>
+                    <input type="file" id="newItemImage" accept="image/*" onchange="previewNewImage(event)">
+                    <img id="newImagePreview" class="image-preview" alt="Preview">
+                </div>
+                <button onclick="addMenuItem()" class="btn"
+                    style="background: #28a745; color: white; padding: 12px 20px; width: 100%; margin-top: 15px;">
+                    ➕ Add Item
+                </button>
+            </div>
+
+            <div
+                style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);">
+                <h2 style="margin-bottom: 20px; color: #333;">Current Menu Items</h2>
+                <div id="menu-items-container"></div>
+            </div>
+        </div>
+
+        <div id="qr-section" class="section">
+            <div class="qr-container">
+                <h2>📱 Customer Menu QR Code</h2>
+                <p style="color: #666; margin-bottom: 20px;">Generate QR code for customers to scan and order</p>
+
+                <!-- Customer site URL configuration -->
+                <div
+                    style="background:#f8f9fa; border:1px solid #dee2e6; border-radius:10px; padding:18px; margin-bottom:22px; text-align:left;">
+                    <label style="display:block; font-weight:600; color:#333; margin-bottom:6px; font-size:14px;">
+                        🌐 Customer Website URL
+                    </label>
+                    <p style="color:#666; font-size:13px; margin:0 0 10px;">
+                        Enter the base URL of your customer-facing menu site. Leave blank to use this page's domain
+                        automatically.
+                        <br>Example: <code>https://smart-restaurant-menu.netlify.app</code>
+                    </p>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <input type="url" id="qrBaseUrlInput" placeholder="https://your-customer-site.netlify.app"
+                            style="flex:1; min-width:220px; padding:9px 12px; border:1px solid #ccc; border-radius:6px; font-size:14px;"
+                            oninput="">
+                        <button onclick="saveQrBaseUrl()"
+                            style="padding:9px 18px; background:#28a745; color:#fff; border:none; border-radius:6px; font-size:14px; cursor:pointer; font-weight:600; white-space:nowrap;">
+                            💾 Save URL
+                        </button>
+                    </div>
+                </div>
+
+                <button class="btn-generate-qr" onclick="generateQR()">Generate QR Code</button>
+
+                <div id="qrDisplay" class="qr-display">
+                    <img id="qrImage" src="" alt="QR Code">
+                    <div class="qr-url">
+                        <strong>Customer URL:</strong><br>
+                        <span id="customerUrl"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings-section" class="section">
+            <div class="settings-container">
+                <h2 style="margin-bottom: 30px; color: #333; text-align: center;">⚙️ Restaurant Settings</h2>
+
+                <div class="settings-group">
+                    <label for="settingsRestaurantName">Restaurant Name</label>
+                    <input type="text" id="settingsRestaurantName" placeholder="Restaurant Name">
+                </div>
+
+                <div class="settings-group">
+                    <label for="settingsOwnerEmail">Email Address</label>
+                    <input type="email" id="settingsOwnerEmail" placeholder="your@email.com">
+                </div>
+
+                <div class="settings-group">
+                    <label for="settingsOwnerPhoneNumber">Phone Number</label>
+                    <div class="phone-number-group">
+                        <select id="settingsOwnerCountryCode" class="country-select"></select>
+                        <div class="phone-input-wrapper no-badge">
+                            <input type="tel" id="settingsOwnerPhoneNumber" placeholder="9876543210"
+                                inputmode="numeric">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <label for="settingsOwnerContact">Contact (Email/Mobile)</label>
+                    <input type="text" id="settingsOwnerContact" placeholder="Contact">
+                    <p class="auth-hint">Legacy contact field retained for backward compatibility.</p>
+                </div>
+
+                <div class="settings-group">
+                    <label for="settingsOwnerPassword">Change Password (Optional)</label>
+                    <input type="password" id="settingsOwnerPassword"
+                        placeholder="Leave blank to keep current password">
+                </div>
+
+                <button class="btn-save-settings" onclick="saveSettings()">💾 Save Changes</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Edit Menu Item</div>
+            <div class="modal-body">
+                <label>Item Name</label>
+                <input type="text" id="editItemName">
+                <label>Price (₹)</label>
+                <input type="number" id="editItemPrice" min="0">
+                <label>Category</label>
+                <select id="editItemCategory">
+                    <option value="Starters">⭐ Starters</option>
+                    <option value="Main Course">🍛 Main Course</option>
+                    <option value="Indian Breads">🫓 Indian Breads</option>
+                    <option value="Rice">🍚 Rice</option>
+                    <option value="Snacks">🍟 Snacks</option>
+                    <option value="Desserts">🍮 Desserts</option>
+                    <option value="Drinks">🥤 Drinks</option>
+                </select>
+                <label>Type</label>
+                <div class="radio-group" style="margin-bottom: 15px;">
+                    <label>
+                        <input type="radio" name="editItemType" value="veg" id="editTypeVeg">
+                        🟢 Veg
+                    </label>
+                    <label>
+                        <input type="radio" name="editItemType" value="nonveg" id="editTypeNonVeg">
+                        🔴 Non-Veg
+                    </label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-save" onclick="saveEdit()">Save Changes</button>
+                <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="changeImageInput" accept="image/*" style="display: none;"
+        onchange="handleImageChange(event)">
+
+
+
+    <script src="default-menu-dataset.js"></script>
+    <script src="owner-dashboard.js"></script>
+</body>
+
+</html>
